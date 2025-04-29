@@ -187,6 +187,29 @@ bool ImportCell2Ds(PolygonalMesh& mesh)
 		auto [itor, bool_val] = m.try_emplace(marker);
 		itor -> second.push_back(id);
     }
+	
+	vector<unsigned int>& vec_vert = mesh.cells2Ds_vertices[id];
+	const unsigned int n = vec_vert.size();
+	
+	double area = 0.0;
+	for(size_t i=0; i<n; i++){
+		const unsigned int vi_id = vec_vert[i];
+		const unsigned int vj_id = vec_vert[(i+1)%n]
+		
+		const MatrixXd coord = mesh.cell0Ds_coordinates;
+		const double X_vi = coord(0, vi_id);
+        const double Y_vi = coord(1, vi_id);
+        const double X_vj = coord(0, vj_id);
+        const double Y_vj = coord(1, vj_id);
+
+        Area += (X_vi * Y_vj) - (X_vj * Y_vi);
+	}
+	Area = abs(Area / 2.0);
+	
+	if(Area <= 1e-16){
+		cerr<<"Test non superato: il poligono" <<id<< "ha area nulla"<<endl;
+	return false;
+	}
 
     return true;
 }
